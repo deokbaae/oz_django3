@@ -26,3 +26,19 @@ line-length = 120
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+python_version = 3.12
+strict = true
+
+[tool.django-stubs]
+django_settings_module = "oz_django3.settings"
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "manage"
+ignore_errors = true
