@@ -1,8 +1,8 @@
 from django.db import IntegrityError
 from django.test import TestCase
 
-from tabom.models import Article, User
-from tabom.service import do_like
+from tabom.models import Article, User, Like
+from tabom.service import do_like, undo_like
 
 
 class TestLikeService(TestCase):
@@ -37,3 +37,28 @@ class TestLikeService(TestCase):
         # When
         with self.assertRaises(IntegrityError):
             like = do_like(98989898989898, article.id)
+
+    def test_like_count_should_increase(self) -> None:
+        # Given
+        user = User.objects.create(name="test")
+        article = Article.objects.create(title="test_article")
+
+        # When
+        do_like(user.id, article.id)
+
+        # Then
+        article = Article.objects.get(id=article.id)
+        self.assertEqual(1, article.like_set.count())
+
+    def test_a_user_can_undo_like(self) -> None:
+        # Given
+        user = User.objects.create(name="test")
+        article = Article.objects.create(title="test_article")
+        like = do_like(user.id, article.id)
+
+        # When
+        undo_like(user.id, article.id)
+
+        # Then: 어떻게 할까...!
+        with self.assertRaises(Like.DoesNotExist):
+            Like.objects.get(id=like.id)
