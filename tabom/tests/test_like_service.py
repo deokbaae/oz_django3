@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.test import TestCase
 
-from tabom.models import Article, User, Like
+from tabom.models import Article, Like, User
 from tabom.service import do_like, undo_like
 
 
